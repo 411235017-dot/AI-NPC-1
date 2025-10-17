@@ -96,52 +96,6 @@
       header h1{font-size:1.8em}
       #clock{font-size:1em}
     }
-/* 滑桿：固定在聊天區右側 */
-#scroll-slider{
-  position: absolute;
-  right: 8px;
-  top: 100px;              /* 視你的版面可微調 */
-  bottom: 90px;            /* 不要遮到輸入列 */
-  width: 26px;             /* 先設寬，旋轉後會當高度用 */
-  transform: rotate(-90deg);
-  transform-origin: right center;
-  -webkit-appearance: none;
-  appearance: none;
-  background: transparent;
-  z-index: 2;
-  opacity: .85;
-}
-
-/* 讓 .chat-section 成為定位容器 */
-.chat-section{ position: relative; }
-
-/* 美化滑桿軌道與手把（Chrome/Edge/Safari） */
-#scroll-slider::-webkit-slider-runnable-track{
-  height: 6px;
-  background: rgba(144,213,255,.25);
-  border-radius: 4px;
-}
-#scroll-slider::-webkit-slider-thumb{
-  -webkit-appearance: none;
-  appearance: none;
-  width: 16px; height: 16px;
-  background: var(--primary-color);
-  border-radius: 50%;
-  margin-top: -5px; /* 對齊軌道 */
-  box-shadow: 0 0 8px rgba(0,255,255,.6);
-}
-#scroll-slider:focus{ outline: none; }
-
-/* Firefox */
-#scroll-slider::-moz-range-track{
-  height: 6px; background: rgba(144,213,255,.25); border-radius: 4px;
-}
-#scroll-slider::-moz-range-thumb{
-  width: 16px; height: 16px; background: var(--primary-color); border: none; border-radius: 50%;
-}
-
-
-
   </style>
 </head>
 <body>
@@ -207,9 +161,6 @@
       /* --------- Chat Elements --------- */
       const chatWindow = document.getElementById('chat-window');
       const suggestionsContainer = document.getElementById('question-suggestions');
-
-
-<input id="scroll-slider" type="range" min="0" value="0" step="1" aria-label="聊天捲動滑桿" />
       const inputEl = document.getElementById('user-input');
       const sendBtn = document.getElementById('send-btn');
 
