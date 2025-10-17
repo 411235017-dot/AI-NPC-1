@@ -1,418 +1,304 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>克蘿伊 - 時間縫隙的旅者 | AI 顧問</title>
-    <style>
-        /* --- Google Fonts --- */
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Noto+Sans+TC:wght@300;400;700&display=swap');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>克蘿伊 - 時間縫隙的旅者 | AI 顧問</title>
+  <style>
+    /* --- Google Fonts --- */
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Noto+Sans+TC:wght@300;400;700&display=swap');
 
-        /* --- Global Styles & Resets --- */
-        :root {
-            --primary-color: #00ffff; /* Cyan */
-            --secondary-color: #90d5ff; /* Light Blue */
-            --background-color: #0a192f; /* Dark Navy */
-            --text-color: #ccd6f6;
-            --accent-glow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color), 0 0 30px rgba(0, 255, 255, 0.5);
-        }
+    /* --- Global Styles & Resets --- */
+    :root{
+      --primary-color:#00ffff;
+      --secondary-color:#90d5ff;
+      --background-color:#0a192f;
+      --text-color:#ccd6f6;
+      --accent-glow:0 0 10px var(--primary-color),0 0 20px var(--primary-color),0 0 30px rgba(0,255,255,.5);
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:'Noto Sans TC',sans-serif;background:#0a192f;color:var(--text-color);
+      overflow:hidden;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;
+    }
+    .background-particles{position:fixed;inset:0;z-index:-1}
+    .particle{position:absolute;background:var(--primary-color);border-radius:50%;opacity:.5;animation:float 25s infinite linear}
+    @keyframes float{0%{transform:translateY(100vh) scale(0)}100%{transform:translateY(-10vh) scale(1)}}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    .container{
+      width:100%;max-width:1000px;height:90vh;max-height:700px;background:rgba(10,25,47,.85);
+      backdrop-filter:blur(10px);border:1px solid rgba(0,255,255,.3);border-radius:15px;
+      box-shadow:0 0 30px rgba(0,255,255,.2);display:flex;flex-direction:column;
+    }
+    header{padding:20px;border-bottom:1px solid rgba(0,255,255,.3);text-align:center}
+    header h1{font-family:'Orbitron',sans-serif;color:var(--primary-color);text-shadow:var(--accent-glow);letter-spacing:2px;font-size:2.5em}
+    #clock{font-family:'Orbitron',sans-serif;color:var(--secondary-color);font-size:1.2em;letter-spacing:1px;margin-top:5px;text-shadow:0 0 5px var(--secondary-color)}
 
-        body {
-            font-family: 'Noto Sans TC', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
+    .main-content{display:flex;flex-grow:1;overflow:hidden}
+    .profile-section{
+      width:300px;padding:20px;border-right:1px solid rgba(0,255,255,.3);display:flex;flex-direction:column;align-items:center;text-align:center
+    }
+    .avatar-placeholder{
+      width:150px;height:150px;border-radius:50%;
+      background:radial-gradient(circle,var(--secondary-color) 0%,var(--background-color) 70%);
+      border:2px solid var(--primary-color);box-shadow:var(--accent-glow);margin-bottom:20px
+    }
+    .profile-section h2{font-weight:700;color:var(--primary-color);font-size:1.5em}
+    .profile-section .title{color:var(--secondary-color);margin-bottom:15px}
+    .profile-section .bio{font-size:.9em;line-height:1.6}
 
-        /* --- Animated Background --- */
-        .background-particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
+    .chat-section{flex-grow:1;display:flex;flex-direction:column;padding:20px}
+    #chat-window{flex-grow:1;overflow-y:auto;margin-bottom:15px;padding-right:10px;display:flex;flex-direction:column;gap:14px}
+    .message{max-width:90%;line-height:1.6}
+    .message.chloe{align-self:flex-start}
+    .message.user{align-self:flex-end;text-align:right}
+    .message .sender{font-weight:700;font-size:.9em;margin-bottom:5px;color:var(--primary-color)}
+    .message.user .sender{color:var(--secondary-color)}
+    .message .bubble{padding:10px 15px;border-radius:10px;background:rgba(0,0,0,.2);border:1px solid rgba(0,255,255,.2)}
+    .message.user .bubble{background:rgba(144,213,255,.1)}
+    .bubble strong{display:block;margin-bottom:5px;color:var(--secondary-color)}
 
-        .particle {
-            position: absolute;
-            background: var(--primary-color);
-            border-radius: 50%;
-            opacity: 0.5;
-            animation: float 25s infinite linear;
-        }
+    #question-suggestions{border-top:1px solid rgba(0,255,255,.3);padding-top:15px;display:flex;flex-wrap:wrap;gap:10px}
+    .question-btn{
+      background:transparent;border:1px solid var(--primary-color);color:var(--primary-color);
+      padding:8px 12px;border-radius:5px;cursor:pointer;transition:all .3s ease;font-family:'Noto Sans TC',sans-serif;
+    }
+    .question-btn:hover{background:rgba(0,255,255,.2);box-shadow:0 0 10px rgba(0,255,255,.5)}
 
-        @keyframes float {
-            0% { transform: translateY(100vh) scale(0); }
-            100% { transform: translateY(-10vh) scale(1); }
-        }
-        
-        /* --- Main Container --- */
-        .container {
-            width: 100%;
-            max-width: 1000px;
-            height: 90vh;
-            max-height: 700px;
-            background: rgba(10, 25, 47, 0.85);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 255, 255, 0.3);
-            border-radius: 15px;
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
-            display: flex;
-            flex-direction: column;
-        }
-        
-        /* --- Header --- */
-        header {
-            padding: 20px;
-            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
-            text-align: center;
-        }
+    .composer{
+      display:flex;gap:10px;border-top:1px solid rgba(0,255,255,.3);padding-top:12px;margin-top:12px
+    }
+    .composer input{
+      flex:1;background:rgba(255,255,255,.05);color:var(--text-color);border:1px solid rgba(0,255,255,.25);
+      border-radius:8px;padding:12px 14px;outline:none
+    }
+    .composer button{
+      padding:12px 16px;border-radius:8px;border:1px solid var(--primary-color);background:transparent;
+      color:var(--primary-color);cursor:pointer;transition:.2s
+    }
+    .composer button:hover{background:rgba(0,255,255,.15)}
+    .typing{opacity:.8;font-size:.9em}
 
-        header h1 {
-            font-family: 'Orbitron', sans-serif;
-            color: var(--primary-color);
-            text-shadow: var(--accent-glow);
-            letter-spacing: 2px;
-            font-size: 2.5em;
-        }
+    #chat-window::-webkit-scrollbar{width:6px}
+    #chat-window::-webkit-scrollbar-track{background:transparent}
+    #chat-window::-webkit-scrollbar-thumb{background:var(--primary-color);border-radius:3px}
 
-        #clock {
-            font-family: 'Orbitron', sans-serif;
-            color: var(--secondary-color);
-            font-size: 1.2em;
-            letter-spacing: 1px;
-            margin-top: 5px;
-            text-shadow: 0 0 5px var(--secondary-color);
-        }
-
-        /* --- Main Content --- */
-        .main-content {
-            display: flex;
-            flex-grow: 1;
-            overflow: hidden;
-        }
-        
-        /* --- Profile Section (Left) --- */
-        .profile-section {
-            width: 300px;
-            padding: 20px;
-            border-right: 1px solid rgba(0, 255, 255, 0.3);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-
-        .avatar-placeholder {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: radial-gradient(circle, var(--secondary-color) 0%, var(--background-color) 70%);
-            border: 2px solid var(--primary-color);
-            box-shadow: var(--accent-glow);
-            margin-bottom: 20px;
-        }
-
-        .profile-section h2 {
-            font-family: 'Noto Sans TC', sans-serif;
-            font-weight: 700;
-            color: var(--primary-color);
-            font-size: 1.5em;
-        }
-        
-        .profile-section .title {
-            color: var(--secondary-color);
-            margin-bottom: 15px;
-        }
-
-        .profile-section .bio {
-            font-size: 0.9em;
-            line-height: 1.6;
-        }
-
-        /* --- Chat Section (Right) --- */
-        .chat-section {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-        }
-
-        #chat-window {
-            flex-grow: 1;
-            overflow-y: auto;
-            margin-bottom: 15px;
-            padding-right: 10px;
-        }
-
-        .message {
-            margin-bottom: 15px;
-            max-width: 90%;
-            line-height: 1.6;
-        }
-
-        .message.chloe {
-            align-self: flex-start;
-        }
-        
-        .message.user {
-            align-self: flex-end;
-            text-align: right;
-        }
-
-        .message .sender {
-            font-weight: 700;
-            font-size: 0.9em;
-            margin-bottom: 5px;
-            color: var(--primary-color);
-        }
-        
-        .message.user .sender {
-            color: var(--secondary-color);
-        }
-
-        .message .bubble {
-            padding: 10px 15px;
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(0, 255, 255, 0.2);
-        }
-        
-        .message.user .bubble {
-            background: rgba(144, 213, 255, 0.1);
-        }
-
-        .bubble strong { /* For Chloe's titles */
-            display: block;
-            margin-bottom: 5px;
-            color: var(--secondary-color);
-        }
-        
-        #question-suggestions {
-            border-top: 1px solid rgba(0, 255, 255, 0.3);
-            padding-top: 15px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .question-btn {
-            background: transparent;
-            border: 1px solid var(--primary-color);
-            color: var(--primary-color);
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Noto Sans TC', sans-serif;
-        }
-
-        .question-btn:hover {
-            background: rgba(0, 255, 255, 0.2);
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-        }
-
-        /* --- Scrollbar --- */
-        #chat-window::-webkit-scrollbar {
-            width: 6px;
-        }
-        #chat-window::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        #chat-window::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 3px;
-        }
-
-        /* --- Responsive Design --- */
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-                height: auto;
-            }
-            .container {
-                height: 95vh;
-                max-height: none;
-            }
-            .main-content {
-                flex-direction: column;
-            }
-            .profile-section {
-                width: 100%;
-                border-right: none;
-                border-bottom: 1px solid rgba(0, 255, 255, 0.3);
-                padding: 15px;
-                max-height: 200px; /* Limit height on mobile */
-                flex-direction: row;
-                gap: 15px;
-            }
-            .avatar-placeholder {
-                width: 80px;
-                height: 80px;
-                margin-bottom: 0;
-            }
-            .profile-section .text-content {
-                text-align: left;
-            }
-            header h1 { font-size: 1.8em; }
-            #clock { font-size: 1em; }
-        }
-
-    </style>
+    @media (max-width:768px){
+      body{padding:10px;height:auto}
+      .container{height:95vh;max-height:none}
+      .main-content{flex-direction:column}
+      .profile-section{
+        width:100%;border-right:none;border-bottom:1px solid rgba(0,255,255,.3);
+        padding:15px;max-height:200px;flex-direction:row;gap:15px
+      }
+      .avatar-placeholder{width:80px;height:80px;margin-bottom:0}
+      .profile-section .text-content{text-align:left}
+      header h1{font-size:1.8em}
+      #clock{font-size:1em}
+    }
+  </style>
 </head>
 <body>
+  <div class="background-particles"></div>
 
-    <div class="background-particles"></div>
+  <main class="container">
+    <header>
+      <h1>C H L O E</h1>
+      <div id="clock">--:--:--</div>
+    </header>
 
-    <main class="container">
-        <header>
-            <h1>C H L O E</h1>
-            <div id="clock">--:--:--</div>
-        </header>
-
-        <div class="main-content">
-            <section class="profile-section">
-                <div class="avatar-placeholder"></div>
-                <div class="text-content">
-                    <h2>克蘿伊</h2>
-                    <p class="title">時間縫隙的旅者</p>
-                    <p class="bio">你好，我是民宿的AI顧問克蘿伊。我的任務是透過手冊中的知識，為您提供最精準的資訊，並觀察這個時代的美好。</p>
-                </div>
-            </section>
-
-            <section class="chat-section">
-                <div id="chat-window">
-                    </div>
-                <div id="question-suggestions">
-                    </div>
-            </section>
+    <div class="main-content">
+      <section class="profile-section">
+        <div class="avatar-placeholder"></div>
+        <div class="text-content">
+          <h2>克蘿伊</h2>
+          <p class="title">時間縫隙的旅者</p>
+          <p class="bio">你好，我是民宿的AI顧問克蘿伊。我的任務是透過手冊中的知識，為您提供最精準的資訊，並觀察這個時代的美好。</p>
         </div>
-    </main>
+      </section>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            // --- Live Clock ---
-            const clockElement = document.getElementById('clock');
-            function updateClock() {
-                const now = new Date();
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                const seconds = String(now.getSeconds()).padStart(2, '0');
-                clockElement.textContent = `${hours}:${minutes}:${seconds}`;
-            }
-            setInterval(updateClock, 1000);
-            updateClock();
+      <section class="chat-section">
+        <div id="chat-window"></div>
 
-            // --- Animated Background ---
-            const particleContainer = document.querySelector('.background-particles');
-            const numParticles = 50;
-            for (let i = 0; i < numParticles; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                const size = Math.random() * 5 + 1;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.animationDuration = `${Math.random() * 15 + 10}s`;
-                particle.style.animationDelay = `${Math.random() * 5}s`;
-                particleContainer.appendChild(particle);
-            }
+        <div id="question-suggestions"></div>
 
-            // --- Chat/FAQ Logic ---
-            const chatWindow = document.getElementById('chat-window');
-            const suggestionsContainer = document.getElementById('question-suggestions');
+        <!-- ✅ 新增輸入列 -->
+        <div class="composer">
+          <input id="user-input" type="text" placeholder="輸入訊息，按 Enter 或點送出…"/>
+          <button id="send-btn">送出</button>
+        </div>
+      </section>
+    </div>
+  </main>
 
-            const faqData = {
-                "住宿價格怎麼算？": {
-                    "lookup_phrase": "關於「價格」的紀錄在第45頁...找到了！",
-                    "record_title": "【手冊中的紀錄】",
-                    "record_body": "我們的房價分為「平日價」與「假日價」。週日至週四適用平日價，週五、週六及國定假日則適用假日價。",
-                    "observation_title": "【時旅者的觀察日誌】",
-                    "observation_body": "根據一週內的特定日子來變動貨幣交換值，真是個有趣的週期性經濟行為。"
-                },
-                "可以帶寵物嗎？": {
-                    "lookup_phrase": "我查詢一下手冊的「寵物政策」...在第89頁。",
-                    "record_title": "【手冊中的紀錄】",
-                    "record_body": "很抱歉，為了維護住宿環境的品質與考量到部分對動物毛髮過敏的旅客，我們全館是禁止攜帶寵物入住的。",
-                    "observation_title": "【時旅者的觀察日誌】",
-                    "observation_body": "將動物視為「家庭成員」並一同旅行，是現代一種非常溫暖的情感連結形式呢。可惜我們這裡暫時無法支援。"
-                },
-                "附近有什麼景點？": {
-                    "lookup_phrase": "我查詢一下手冊的「周邊景點推薦」...",
-                    "record_title": "【手冊中的紀錄】",
-                    "record_body": "我們的位置非常便利，距離知名的「遠雄海洋公園」僅5分鐘車程，往北10分鐘有「山度空間」可以看海喝咖啡。",
-                    "observation_title": "【時旅者的觀察日誌】",
-                    "observation_body": "人類會將具有特殊景觀或意義的地點標記為「景點」，並特地前往。這種「朝聖」般的行為，似乎是為了收集回憶與體驗。"
-                },
-                "房間看得到日出嗎？": {
-                    "lookup_phrase": "關於「日出觀測」的指南在第112頁...",
-                    "record_title": "【手冊中的紀錄】",
-                    "record_body": "是的，「聽海豪華雙人房」與「沐光家庭四人房」因面向東邊的太平洋，在天氣晴朗時，早晨可以直接在房間或陽台欣賞壯麗的海上日出。",
-                    "observation_title": "【時旅者的觀察日誌】",
-                    "observation_body": "追逐恆星自地平線升起的瞬間，是人類自古以來對光明與希望的崇拜。"
-                }
-            };
-            
-            function displayMessage(text, sender) {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${sender}`;
-                
-                let senderName = sender === 'chloe' ? '克蘿伊' : '您';
-                
-                messageDiv.innerHTML = `
-                    <div class="sender">${senderName}</div>
-                    <div class="bubble">${text}</div>
-                `;
-                chatWindow.appendChild(messageDiv);
-                chatWindow.scrollTop = chatWindow.scrollHeight;
-            }
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      /* --------- Live Clock --------- */
+      const clockElement = document.getElementById('clock');
+      function updateClock() {
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2,'0');
+        const m = String(now.getMinutes()).padStart(2,'0');
+        const s = String(now.getSeconds()).padStart(2,'0');
+        clockElement.textContent = `${h}:${m}:${s}`;
+      }
+      setInterval(updateClock, 1000); updateClock();
 
-            function askQuestion(question) {
-                displayMessage(question, 'user');
-                const answer = faqData[question];
-                
-                // Simulate thinking
-                setTimeout(() => {
-                    let chloeResponse = `
-                        <em>${answer.lookup_phrase}</em><br><br>
-                        <strong>${answer.record_title}</strong>
-                        <p>${answer.record_body}</p><br>
-                        <strong>${answer.observation_title}</strong>
-                        <p>${answer.observation_body}</p>
-                    `;
-                    displayMessage(chloeResponse, 'chloe');
-                }, 1200);
-            }
+      /* --------- Background Particles --------- */
+      const particleContainer = document.querySelector('.background-particles');
+      const numParticles = 50;
+      for (let i = 0; i < numParticles; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 5 + 1;
+        p.style.width = `${size}px`; p.style.height = `${size}px`;
+        p.style.left = `${Math.random() * 100}%`;
+        p.style.animationDuration = `${Math.random() * 15 + 10}s`;
+        p.style.animationDelay = `${Math.random() * 5}s`;
+        particleContainer.appendChild(p);
+      }
 
-            // Create suggestion buttons
-            Object.keys(faqData).forEach(question => {
-                const button = document.createElement('button');
-                button.className = 'question-btn';
-                button.textContent = question;
-                button.onclick = () => askQuestion(question);
-                suggestionsContainer.appendChild(button);
-            });
-            
-            // Initial welcome message
-            setTimeout(() => {
-                displayMessage('您好，有什麼可以為您服務的嗎？您可以點擊下方的常見問題，我會為您解答。', 'chloe');
-            }, 500);
+      /* --------- Chat Elements --------- */
+      const chatWindow = document.getElementById('chat-window');
+      const suggestionsContainer = document.getElementById('question-suggestions');
+      const inputEl = document.getElementById('user-input');
+      const sendBtn = document.getElementById('send-btn');
 
-        });
-    </script>
+      // ✅ 你的 Worker /chat URL（如需更換請改這一行）
+      const WORKER_URL = "https://ancient-scene-f639.chenfelix30.workers.dev/chat";
 
+      // 角色與回覆原則（會當作前綴送到模型）
+      const SYSTEM_PROMPT =
+        "你是民宿 AI 顧問【克蘿伊】，語氣溫和專業、帶一點觀察者的詩意。" +
+        "回答要簡潔、正確；若根據不充分，先詢問澄清或提供建議的下一步。";
+
+      // 常見問題（按鈕點擊會把結構性內容一併丟給 AI）
+      const faqData = {
+        "住宿價格怎麼算？": {
+          "lookup_phrase":"關於「價格」的紀錄在第45頁...找到了！",
+          "record_title":"【手冊中的紀錄】",
+          "record_body":"我們的房價分為「平日價」與「假日價」。週日至週四適用平日價，週五、週六及國定假日則適用假日價。",
+          "observation_title":"【時旅者的觀察日誌】",
+          "observation_body":"根據一週內的特定日子來變動貨幣交換值，真是個有趣的週期性經濟行為。"
+        },
+        "可以帶寵物嗎？": {
+          "lookup_phrase":"我查詢一下手冊的「寵物政策」...在第89頁。",
+          "record_title":"【手冊中的紀錄】",
+          "record_body":"很抱歉，為了維護住宿環境的品質與考量到部分對動物毛髮過敏的旅客，我們全館是禁止攜帶寵物入住的。",
+          "observation_title":"【時旅者的觀察日誌】",
+          "observation_body":"將動物視為「家庭成員」並一同旅行，是現代一種非常溫暖的情感連結形式呢。可惜我們這裡暫時無法支援。"
+        },
+        "附近有什麼景點？": {
+          "lookup_phrase":"我查詢一下手冊的「周邊景點推薦」...",
+          "record_title":"【手冊中的紀錄】",
+          "record_body":"我們的位置非常便利，距離知名的「遠雄海洋公園」僅5分鐘車程，往北10分鐘有「山度空間」可以看海喝咖啡。",
+          "observation_title":"【時旅者的觀察日誌】",
+          "observation_body":"人類會將具有特殊景觀或意義的地點標記為「景點」，並特地前往。這種「朝聖」般的行為，似乎是為了收集回憶與體驗。"
+        },
+        "房間看得到日出嗎？": {
+          "lookup_phrase":"關於「日出觀測」的指南在第112頁...",
+          "record_title":"【手冊中的紀錄】",
+          "record_body":"是的，「聽海豪華雙人房」與「沐光家庭四人房」因面向東邊的太平洋，在天氣晴朗時，早晨可以直接在房間或陽台欣賞壯麗的海上日出。",
+          "observation_title":"【時旅者的觀察日誌】",
+          "observation_body":"追逐恆星自地平線升起的瞬間，是人類自古以來對光明與希望的崇拜。"
+        }
+      };
+
+      /* ---------- UI helpers ---------- */
+      function htmlEscape(s){
+        return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+      }
+      function displayMessage(text, sender, {isHTML=false}={}){
+        const wrap = document.createElement('div');
+        wrap.className = `message ${sender}`;
+        const name = sender === 'chloe' ? '克蘿伊' : '您';
+        const bubble = isHTML ? text : htmlEscape(text).replace(/\n/g,'<br/>');
+        wrap.innerHTML =
+          `<div class="sender">${name}</div><div class="bubble">${bubble}</div>`;
+        chatWindow.appendChild(wrap);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+      }
+      function showTyping(){
+        const t = document.createElement('div');
+        t.className = 'message chloe typing';
+        t.innerHTML = `<div class="sender">克蘿伊</div><div class="bubble">正在思考中…</div>`;
+        chatWindow.appendChild(t);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+        return t;
+      }
+
+      /* ---------- Talk to Worker / Gemini ---------- */
+      async function sendToAI(userText, extraContext=""){
+        // 顯示使用者訊息
+        displayMessage(userText, 'user');
+
+        // typing
+        const typingNode = showTyping();
+        sendBtn.disabled = true; inputEl.disabled = true;
+
+        try{
+          // 把系統設定 + 額外上下文（如 FAQ）一起丟給後端
+          const composed =
+            `${SYSTEM_PROMPT}\n\n` +
+            (extraContext ? `【輔助資料】\n${extraContext}\n\n` : "") +
+            `使用者：${userText}`;
+
+          const r = await fetch(WORKER_URL, {
+            method: "POST",
+            headers: { "Content-Type":"application/json" },
+            body: JSON.stringify({ message: composed })
+          });
+
+          const data = await r.json();
+          typingNode.remove();
+
+          if(data && data.reply){
+            displayMessage(data.reply, 'chloe', { isHTML:false });
+          }else{
+            displayMessage("（沒有回應或格式不符）", 'chloe');
+          }
+        }catch(err){
+          typingNode.remove();
+          displayMessage("發生錯誤：" + err.message, 'chloe');
+        }finally{
+          sendBtn.disabled = false; inputEl.disabled = false; inputEl.focus();
+        }
+      }
+
+      /* ---------- FAQ buttons ---------- */
+      Object.keys(faqData).forEach(q => {
+        const b = document.createElement('button');
+        b.className = 'question-btn'; b.textContent = q;
+        b.onclick = () => {
+          const a = faqData[q];
+          const ctx =
+            `${a.lookup_phrase}\n\n${a.record_title}\n${a.record_body}\n\n` +
+            `${a.observation_title}\n${a.observation_body}\n\n` +
+            `請以克蘿伊的口吻，先用1~2句話回覆重點，再提供1個建議的下一步。`;
+          sendToAI(q, ctx);
+        };
+        suggestionsContainer.appendChild(b);
+      });
+
+      /* ---------- Composer events ---------- */
+      sendBtn.addEventListener('click', () => {
+        const text = inputEl.value.trim();
+        if(!text) return;
+        inputEl.value = '';
+        sendToAI(text);
+      });
+      inputEl.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter'){
+          e.preventDefault();
+          sendBtn.click();
+        }
+      });
+
+      /* ---------- Initial greeting ---------- */
+      setTimeout(() => {
+        displayMessage('您好，有什麼可以為您服務的嗎？您可以點擊下方的常見問題，或直接輸入想問的內容。', 'chloe');
+      }, 400);
+    });
+  </script>
 </body>
 </html>
